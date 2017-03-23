@@ -1,9 +1,11 @@
 /**
-* This file accounts for all database transactions
-* Implements
-* 1. getCities()
-* 2. getClients()
-*/
+ * @author: Shubham Sharma
+ * 
+ * This file accounts for all database transactions
+ * Implements
+ * 1. checkUserExists()
+ * 2. getUniversityId()
+ */
 
 //Include modules
 var pgp = require('pg-promise')();

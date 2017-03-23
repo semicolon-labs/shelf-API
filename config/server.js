@@ -1,6 +1,8 @@
 /**
-* Setup file of the app.
-*/
+ * @author: Shubham Sharma
+ * 
+ * Setup file of the app.
+ */
 
 //Include modules
 var express = require('express');

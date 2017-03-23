@@ -1,4 +1,6 @@
 /**
+ * @author: Shubham Sharma
+ * 
  * This is the configuration file.
  * It stores all the configuration parameters for our server!
 */

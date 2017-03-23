@@ -1,4 +1,6 @@
 /**
+  * @author: Shubham Sharma
+  *  
   * This is the session management file
   * accounts for the user session management.
   * GAPI authentication; Cookie management;

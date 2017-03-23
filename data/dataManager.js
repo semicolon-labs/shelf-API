@@ -15,7 +15,7 @@ var pool = pgp(config.DBMS_CONFIG);
 /**
  * If user details does not exist in the database, create new user.
  */
-exports.checkUserExists = function(userData, callback){
+function checkUserExists(userData, callback){
   getUniversityId(userData.domain, function(id){
       pool.none(`INSERT INTO shelf.users(username, email, uid) 
                     SELECT $1, $2, $3
@@ -36,7 +36,7 @@ exports.checkUserExists = function(userData, callback){
  * Returns university id from domain
  */
 function getUniversityId(domain, callback){
-  pool.one('SELECT name FROM shelf.universities WHERE domain=$1', [domain])
+  pool.one('SELECT id FROM shelf.universities WHERE domain=$1', [domain])
   .then(function(data){
     callback(data.id);
   })
@@ -45,4 +45,5 @@ function getUniversityId(domain, callback){
   });
 }
 
-module.exports = getUniversityId;
+module.exports = {getUniversityId: getUniversityId,
+                  checkUserExists: checkUserExists}

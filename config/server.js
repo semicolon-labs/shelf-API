@@ -25,6 +25,7 @@ function authChecker(req, res, next) {
 //DEFINE THE APP
 var app = express();
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(session({
     secret: 'someRandomSecretValue',

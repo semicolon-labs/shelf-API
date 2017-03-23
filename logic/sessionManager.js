@@ -84,8 +84,9 @@ function verifyToken(token, callback){
           if(xhr.status===config.HTTP_CODES.OK){
               var raw = JSON.parse(xhr.responseText);
               dataManager.getUniversityId(raw.hd, function(id){
-                if(id=="error")
+                if(id==="error"){
                   callback(false);
+                }
                 else if(raw.email_verified==="true"&&raw.aud===config.GAPI_CLIENT_ID){
                   callback(true);
                 }else {

@@ -16,7 +16,7 @@
 //Include modules
 var config = require('./../config/config.js');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var dataManager = require("./../data/dataManager");
+var userData = require("./../data/userData");
 
 /**
  * POST request with token, domain in body
@@ -32,7 +32,7 @@ exports.login = function(req, res){
       //fetch user details
       getUserDetails(req, function(userData){
         //add user if it does not exists
-        dataManager.checkUserExists(userData, function(info){
+        userData.checkUserExists(userData, function(info){
           if(info=="error")
             res.status(config.HTTP_CODES.SERVER_ERROR).send("Error");
           else{
@@ -85,7 +85,7 @@ function verifyToken(token, callback){
       if(xhr.readystate == XMLHttpRequest.DONE){
           if(xhr.status===config.HTTP_CODES.OK){
               var raw = JSON.parse(xhr.responseText);
-              dataManager.getUniversityId(raw.hd, function(id){
+              userData.getUniversityId(raw.hd, function(id){
                 if(id==="error"){
                   callback(false);
                 }

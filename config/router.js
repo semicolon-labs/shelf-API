@@ -10,7 +10,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 var sessionManager = require('../logic/sessionManager');
-var dataManager = require('../data/dataManager');
+var productManager = require('../logic/productManager');
 
 //www.example.com/public/?filePath=js/jquery.js
 router.get('/public', function(req, res){
@@ -28,6 +28,11 @@ router.get('/logout', function(req ,res){
 
 router.get('/check-login', function(req, res){
 	sessionManager.checkLogin(req, res);
+});
+
+/** PRODUCT routes */
+router.get('/get-products', function(req, res){
+	productManager.getProducts(req, res);
 });
 
 //INDEX redirection for / or any invalid url

@@ -33,7 +33,7 @@ app.use(session({
     secret: 'someRandomSecretValue',
     cookie: {maxAge: 1000*60*60}
 }));
-app.use(authChecker);
+//app.use(authChecker); //temporarily comment out for development
 app.use('/', router);
 
 //START THE APP

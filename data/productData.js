@@ -18,7 +18,7 @@ var config = require('./../config/config.js');
  * Fetches product list from the database
  */
 function getProducts(limit, callback){
-    pool.any(`SELECT id, name, userid, datetime from shelf.products
+    pool.any(`SELECT id, name, userid, author, datetime from shelf.products
                 ORDER BY datetime DESC
                 LIMIT $1 `, [limit])
     .then(function(data){

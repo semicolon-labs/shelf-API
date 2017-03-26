@@ -11,6 +11,7 @@ var config = require('./config.js');
 var router = require('./router.js');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var crypto = require("crypto");
 
 /**
  * Authenticates the traffic prior to routing
@@ -30,10 +31,10 @@ app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(session({
-    secret: 'someRandomSecretValue',
+    secret: crypto.randomBytes(20).toString('hex'),
     cookie: {maxAge: 1000*60*60}
 }));
-//app.use(authChecker); //temporarily comment out for development
+//app.use(authChecker);
 app.use('/', router);
 
 //START THE APP

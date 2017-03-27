@@ -5,11 +5,13 @@
  * Implements
  * 1. checkUserExists()
  * 2. getUniversityId()
+ * 3. getUserId()
  */
 
 //Include modules
 var pool = require('./dataPooler');
 var config = require('./../config/config.js');
+var sessionManager = require('./../logic/sessionManager');
 
 /**
  * If user details does not exist in the database, create new user.
@@ -40,9 +42,27 @@ function getUniversityId(domain, callback){
     callback(data.id);
   })
   .catch(function(error){
+    console.log(error);
     callback("error");
   });
 }
 
+/**
+ * Returns user id by email
+ */
+function getUserId(token, callback){
+  sessionManager.getUserDetails(token, function(details){
+    pool.one(`SELECT id FROM shelf.users WHERE email = $1`, [details.email])
+    .then(function(data){
+      callback(data.id);
+    })
+    .catch(function(error){
+      console.log(error);
+      callback("Error");
+    });
+  });
+}
+
 module.exports = {getUniversityId: getUniversityId,
-                  checkUserExists: checkUserExists}
+                  checkUserExists: checkUserExists,
+                  getUserId: getUserId};

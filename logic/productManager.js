@@ -9,11 +9,14 @@
  * 3. deleteProduct()
  * 4. editProduct()
  * 5. viewProduct()
+ * 6. getCategories()
  */
 
 //Include modules
 var config = require('./../config/config.js');
 var productData = require('./../data/productData');
+var categoryData = require('./../data/categoryData');
+var userData = require('./../data/userData');
 
 /**
  * Gets product list from the database
@@ -46,7 +49,7 @@ function getProducts(req, res){
  * COST: cost of the book. MIN cost 1 and MAX cost 5000
  * CONDITION: condition on a scale of 1 to 5
  * NEGOTIABLE: Boolean: 1 or 0
- * CATEGORIES: Should exist in our database
+ * CATEGORIES: Should exist in our database (category-id)
  * AUTHOR: author of the book. MIN length 6 and MAX length 50
  */
 function addProduct(req, res){
@@ -71,10 +74,42 @@ function addProduct(req, res){
         cost&&!isNaN(cost)&&cost>0&&cost<=5000&&condition&&condition>=0&&condition<=5&&
         negotiable&&!isNaN(negotiable)&&negotiable>=0&&negotiable<=1&&categories&&categories.length>0&&
         author&&author.trim().length()>5&&author.trim().length()<=50){
+            //check validity of categories
+            categoryData.checkCategoriesValid(categories, function(validity){
+                if(validity==0)
+                    res.status(config.HTTP_CODES.BAD_REQUEST).send("Categories invalid. Refer to API documentation for format");
+                else{
+                    //check if product already exists
+                    userData.getUserId(req.session.auth.userToken, function(id){
+                        var product = {name: name, image:image, description:description, cost:cost, condition:condition,
+                                        negotiable: negotiable, categories: categories, author: author, id: id};
+                        productData.checkProductExists(product, function(exists){
+                            if(exists==1)
+                                res.status(config.HTTP_CODES.BAD_REQUEST).send("Product already exists");
+                            else{
+                                //add product
+                            }
+                        });
+                    });
+                }
+            });
 
     }else{
         res.status(config.HTTP_CODES.BAD_REQUEST).send("Bad request. Refer to API documentation for format");
     }
 }
 
-module.exports = {getProducts: getProducts};
+/**
+ * Fetches all category list
+ */
+function getCategories(req, res){
+    categoryData.getCategories(function(categories){
+        if(categories=="Error")
+            res.status(config.HTTP_CODES.SERVER_ERROR).send("Error fetching data");
+        else
+            res.status(config.HTTP_CODES.OK).send(JSON.stringify(categories));
+    });
+}
+
+module.exports = {getProducts: getProducts,
+                    getCategories: getCategories};

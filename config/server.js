@@ -11,7 +11,7 @@ var config = require('./config.js');
 var router = require('./router.js');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var crypto = require("crypto");
+var crypto = require('crypto');
 
 /**
  * Authenticates the traffic prior to routing

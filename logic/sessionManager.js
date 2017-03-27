@@ -30,7 +30,7 @@ exports.login = function(req, res){
     if(status){
       req.session.auth = {userToken: token};
       //fetch user details
-      getUserDetails(req, function(userData){
+      getUserDetails(token, function(userData){
         //add user if it does not exists
         userData.checkUserExists(userData, function(info){
           if(info=="error")
@@ -50,9 +50,9 @@ exports.login = function(req, res){
  * Makes a call to googleapis and gets token info
  * Returns username, id and email of the user
  */
-function getUserDetails(req, callback){
+function getUserDetails(userToken, callback){
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+req.session.auth.userToken);
+  xhr.open('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+userToken);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onload = function() {
     if(xhr.readystate == XMLHttpRequest.DONE){
@@ -122,7 +122,7 @@ exports.logout = function(req, res){
  */
 exports.checkLogin = function(req, res){
   if(req.session&&req.session.auth&&req.session.auth.userToken){
-    getUserDetails(req, function(data){
+    getUserDetails(req.session.auth.userToken, function(data){
       if(data==="Error")
         res.status(config.HTTP_CODES.SERVER_ERROR).send("Error");
       else
@@ -131,3 +131,5 @@ exports.checkLogin = function(req, res){
   }else
     res.status(config.HTTP_CODES.FORBIDDEN).send("False");
 }
+
+module.exports = {getUserDetails: getUserDetails};

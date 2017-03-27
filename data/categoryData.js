@@ -8,6 +8,7 @@
  * 3. insertProductCategories()
  * 4. deleteProductCategories()
  * 5. editProductCategories()
+ * 6. getCategories()
  */
 
 //Include modules
@@ -68,5 +69,20 @@ function getProductCategories(id, callback){
     });
 }
 
+/**
+ * Returns list of categories
+ */
+function getCategories(callback){
+    pool.many(`SELECT * FROM shelf.categories`)
+    .then(function(data){
+        callback(data);
+    })
+    .catch(function(error){
+        console.log(error);
+        callback("Error");
+    });
+}
+
 module.exports = {getProductCategories: getProductCategories,
-                  checkCategoriesValid: checkCategoriesValid};
+                  checkCategoriesValid: checkCategoriesValid,
+                  getCategories: getCategories};

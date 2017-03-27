@@ -35,9 +35,13 @@ router.get('/get-products', function(req, res){
 	productManager.getProducts(req, res);
 });
 
+router.get('/get-categories', function(req, res){
+	productManager.getCategories(req, res);
+});
+
 //INDEX redirection for / or any invalid url
 router.get('/*', function(req, res){
-	res.sendFile(path.join(__dirname, '/../public/html/index.html'));
+	res.send("Shelf API. Refer www.github.com/semicolon-labs/shelf-api for more");
 });
 
 module.exports = router;

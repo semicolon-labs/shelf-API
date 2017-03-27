@@ -14,6 +14,7 @@
 var pool = require('./dataPooler');
 var config = require('./../config/config.js');
 var categoryData = require('./categoryData');
+var imageProvider = require('./imageProvider');
 var async = require('async');
 
 /**
@@ -31,7 +32,10 @@ function getProducts(limit, callback){
             async.map(data, function(product, AsyncCallback){
                 categoryData.getProductCategories(product.id, function(categories){ //mapping product with categories
                     product.categories = categories;
-                    AsyncCallback(null, product);
+                    imageProvider.getImages(product.id, function(images){
+                        product.images = images;
+                        AsyncCallback(null, product);
+                    });
                 });
             }, function(err, result){
                 if(err){
@@ -48,4 +52,23 @@ function getProducts(limit, callback){
     });
 }
 
-module.exports = {getProducts: getProducts};
+/**
+ * Checks if a product is already there in the database 
+ */
+function checkProductExists(product, callback){
+    pool.any(`SELECT COUNT(*) FROM shelf.products WHERE name = $1 AND userid = $2 AND author = $3`, 
+        [product.name, product.id, product.author])
+    .then(function(count){
+        if(count==1)
+            callback(1);
+        else
+            callback(0);
+    })
+    .catch(function(error){
+        console.log(error);
+        callback(0);
+    });
+}
+
+module.exports = {getProducts: getProducts,
+                    checkProductExists, checkProductExists};
